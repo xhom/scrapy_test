@@ -13,7 +13,7 @@ class ScrapyTestItem(scrapy.Item):
     # name = scrapy.Field()
     pass
 
-# 腾讯社招网页数据模型
+# 腾讯社招-数据模型
 class txszItem(scrapy.Item):
     # 职位名
     positionname = scrapy.Field()

@@ -3,6 +3,7 @@
 import scrapy
 from scrapy_test.items import txszItem
 
+# 腾讯社招爬虫主程
 class txszSpider(scrapy.Spider):
     url = "http://hr.tencent.com/position.php?&start="
     offset = 0
