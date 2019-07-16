@@ -9,3 +9,15 @@
 class ScrapyTestPipeline(object):
     def process_item(self, item, spider):
         return item
+
+class txszPipeline(object):
+    # 功能： 保存item数据
+
+    def __init__(self):
+        pass
+
+    def process_item(self, item, spider):
+        print 'item:',item
+
+    def close_spider(self, spider):
+        pass
