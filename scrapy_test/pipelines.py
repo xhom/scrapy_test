@@ -10,14 +10,22 @@ class ScrapyTestPipeline(object):
     def process_item(self, item, spider):
         return item
 
-class txszPipeline(object):
+import json
+from scrapy_test.db.db_save import DBSave
+class cqutPipeline(object):
     # 功能： 保存item数据
 
     def __init__(self):
-        pass
+        self.save_file = open("cqut_news.json", "w")
+        self.dbSave = DBSave("cqut_news")
 
     def process_item(self, item, spider):
-        print 'item:',item
+        #json_item = json.dumps(dict(item), ensure_ascii=False) + ",\n"
+        #self.save_file.write(json_item.encode("gbk"))
+        #保存到数据库
+        self.dbSave.insert(item)
+        return item
 
     def close_spider(self, spider):
-        pass
+        self.save_file.close()
+        self.dbSave.close_conn()

@@ -13,17 +13,13 @@ class ScrapyTestItem(scrapy.Item):
     # name = scrapy.Field()
     pass
 
-# 腾讯社招-数据模型
-class txszItem(scrapy.Item):
-    # 职位名
-    positionname = scrapy.Field()
-    # 详情连接
-    positionlink = scrapy.Field()
-    # 职位类别
-    positionType = scrapy.Field()
-    # 招聘人数
-    peopleNum = scrapy.Field()
-    # 工作地点
-    workLocation = scrapy.Field()
+# cqut-news-数据模型
+class cqutItem(scrapy.Item):
+    # 新闻标题
+    title       = scrapy.Field()
+    # 链接
+    link        = scrapy.Field()
+    # 内容(通过子链接link抓取)
+    content     = scrapy.Field()
     # 发布时间
     publishTime = scrapy.Field()
