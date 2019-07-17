@@ -17,7 +17,7 @@ class cqutPipeline(object):
 
     def __init__(self):
         self.save_file = open("cqut_news.json", "w")
-        self.dbSave = DBSave("cqut_news")
+        self.dbSave = DBSave("cqut_news",4096)
 
     def process_item(self, item, spider):
         #json_item = json.dumps(dict(item), ensure_ascii=False) + ",\n"

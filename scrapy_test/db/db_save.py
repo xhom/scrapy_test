@@ -4,7 +4,7 @@ import pymysql
 pymysql.install_as_MySQLdb() # 用pymysql替代MySQLdb
 import sys
 reload(sys)
-sys.setdefaultencoding('utf-8')
+sys.setdefaultencoding("gbk")
 
 class DBSave:
 
@@ -28,9 +28,9 @@ class DBSave:
         for field in item:
             create_table_sql += (field + " VARCHAR("+str(self.maxLength)+"),")
         create_table_sql = create_table_sql[0:len(create_table_sql)-1]
-        create_table_sql += ")"
+        create_table_sql += ");"
 
-        print "建表sql：",create_table_sql
+        print "CREATE TABLE SQL：",create_table_sql
         self.cursor.execute(create_table_sql)
 
     def insert(self,item):
@@ -41,20 +41,20 @@ class DBSave:
         keys, values = "", ""
         for key in item:
             keys += key+','
-            values += '"'+str(item[key])+'",'
+            values += '"'+item[key]+'",'
         keys = keys[0:len(keys)-1]
         values = values[0:len(values)-1]
         insert_sql += keys+") VALUES("
         insert_sql += values+")"
 
         try:
-            print "写入sql:", insert_sql
+            print "INSERT SQL:", insert_sql
             self.cursor.execute(insert_sql)
             self.db.commit()  # 提交
-            print '数据写入成功'
+            print 'INSERT SUCCESS.'
         except Exception, e:
             self.db.rollback()  # 回滚
-            print '数据写入失败,已回滚', e
+            print 'INSERT FAILED AND ROLLBACK: ', e
 
     def close_conn(self):
         # 关闭游标&数据库

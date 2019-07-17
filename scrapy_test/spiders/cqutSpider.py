@@ -6,7 +6,8 @@ from scrapy_test.items import cqutItem
 # 腾讯社招爬虫主程
 class cqutSpider(scrapy.Spider):
     url = "https://www.cqut.edu.cn/index/"
-    pageSize = 123
+    pageNo = 123
+    pageSize = 20
 
     # 爬虫名称，唯一不可重复
     name = "cqut_spider"
@@ -17,9 +18,9 @@ class cqutSpider(scrapy.Spider):
 
     # override结果解析
     def parse(self, response):
-        item = cqutItem()
-        newsList = response.xpath('//div[@class="linklist1"]/ul/li')
+        newsList = response.xpath('//div[@class="linklist1"]/ul/li')[0:self.pageSize]
         for news in newsList:
+            item = cqutItem()
             item['title'] = news.xpath('./a/text()').extract()[0]
             item['link'] = news.xpath('./a/@href').extract()[0]
             item['publishTime'] = news.xpath('./span/text()').extract()[0]
@@ -27,11 +28,10 @@ class cqutSpider(scrapy.Spider):
             detailUrl = "https://www.cqut.edu.cn/" + str(item['link']).replace("../", '')
             yield scrapy.Request(detailUrl, meta={'item':item}, callback=self.content_parse)
 
-        if self.pageSize > 122:
-            self.pageSize -= 1
-
-        nextUrl = self.url+"xxyw/"+str(self.pageSize)+'.htm'
-        yield scrapy.Request(nextUrl,callback=self.parse)
+        if self.pageNo > 1:
+            self.pageNo -= 1
+            nextUrl = self.url+"xxyw/"+str(self.pageNo)+'.htm'
+            yield scrapy.Request(nextUrl,callback=self.parse)
 
     def content_parse(self, response):
         item = response.meta['item']
@@ -41,7 +41,7 @@ class cqutSpider(scrapy.Spider):
             content += content_item
         item['content'] = content
 
-        yield item
+        return item
 
 
 # 执行这个爬虫：scrapy crawl cqut_spider
