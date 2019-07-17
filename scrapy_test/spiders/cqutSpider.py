@@ -36,7 +36,7 @@ class cqutSpider(scrapy.Spider):
     def content_parse(self, response):
         item = response.meta['item']
         content = ''
-        content_list = response.xpath('//div[@class="contentarea"]/div[@class="context"]/div/p/text()').extract()
+        content_list = response.xpath('//div[@class="contentarea"]/div[@class="context"]//p/text()').extract()
         for content_item in content_list:
             content += content_item
         item['content'] = content
