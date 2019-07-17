@@ -1,5 +1,6 @@
 # coding=UTF-8
 
+import re
 import scrapy
 from scrapy_test.items import cqutItem
 
@@ -25,8 +26,8 @@ class cqutSpider(scrapy.Spider):
             item['link'] = news.xpath('./a/@href').extract()[0]
             item['publishTime'] = news.xpath('./span/text()').extract()[0]
 
-            detailUrl = "https://www.cqut.edu.cn/" + str(item['link']).replace("../", '')
-            yield scrapy.Request(detailUrl, meta={'item':item}, callback=self.content_parse)
+            item['link'] = "https://www.cqut.edu.cn/" + str(item['link']).replace("../", '')
+            yield scrapy.Request(item['link'], meta={'item':item}, callback=self.content_parse)
 
         if self.pageNo > 1:
             self.pageNo -= 1
@@ -34,11 +35,11 @@ class cqutSpider(scrapy.Spider):
             yield scrapy.Request(nextUrl,callback=self.parse)
 
     def content_parse(self, response):
-        item = response.meta['item']
-        content = ''
-        content_list = response.xpath('//div[@class="contentarea"]/div[@class="context"]//p/text()').extract()
-        for content_item in content_list:
-            content += content_item
+        item, content = response.meta['item'], ''
+        p_list = response.xpath('//div[@class="contentarea"]/div[@class="context"]//text()').extract()
+        for p_item in p_list:
+            content += p_item
+
         item['content'] = content
 
         return item
