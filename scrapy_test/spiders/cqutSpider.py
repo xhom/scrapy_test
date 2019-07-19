@@ -1,11 +1,12 @@
 # coding=UTF-8
 
 import re
-import scrapy
+from scrapy import Spider,Request
+from scrapy.loader import ItemLoader
 from scrapy_test.items import cqutItem
 
 # 腾讯社招爬虫主程
-class cqutSpider(scrapy.Spider):
+class cqutSpider(Spider):
     url = "https://www.cqut.edu.cn/index/"
     pageNo = 123
     pageSize = 20
@@ -24,15 +25,19 @@ class cqutSpider(scrapy.Spider):
             item = cqutItem()
             item['title'] = news.xpath('./a/text()').extract()[0]
             item['link'] = news.xpath('./a/@href').extract()[0]
-            item['publishTime'] = news.xpath('./span/text()').extract()[0]
+            item['publish_time'] = news.xpath('./span/text()').extract()[0]
+
+            # itemLoader提供了许多有趣的方式整合数据、格式化数据、清理数据
+            itemLoader = ItemLoader(item=item, response=response)
+            #itemLoader.add_xpath('publish_time','./span/text()')
 
             item['link'] = "https://www.cqut.edu.cn/" + str(item['link']).replace("../", '')
-            yield scrapy.Request(item['link'], meta={'item':item}, callback=self.content_parse)
+            yield Request(item['link'], meta={'item':item}, callback=self.content_parse)
 
         if self.pageNo > 1:
             self.pageNo -= 1
             nextUrl = self.url+"xxyw/"+str(self.pageNo)+'.htm'
-            yield scrapy.Request(nextUrl,callback=self.parse)
+            yield Request(nextUrl,callback=self.parse)
 
     def content_parse(self, response):
         item, content = response.meta['item'], ''

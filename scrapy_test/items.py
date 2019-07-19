@@ -5,21 +5,15 @@
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/items.html
 
-import scrapy
-
-
-class ScrapyTestItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+from scrapy import Item,Field
 
 # cqut-news-数据模型
-class cqutItem(scrapy.Item):
+class cqutItem(Item):
     # 新闻标题
-    title       = scrapy.Field()
+    title        = Field()
     # 链接
-    link        = scrapy.Field()
+    link         = Field()
     # 内容(通过子链接link抓取)
-    content     = scrapy.Field()
+    content      = Field()
     # 发布时间
-    publishTime = scrapy.Field()
+    publish_time = Field()
